@@ -485,6 +485,7 @@ server
       .timing( "response", req.url, Date.now() - req._time, util.format( "%j", (route||{}).spec ) )
       .event( "clients", req.query.appname||req.headers["user-agent"] )
       .send();
+    logger.info( "Request done (%s) in %s", req.url, ((Date.now() - req._time)/1000).toFixed(2) );
   });
 if( module.parent  ){
   module.exports = server;
