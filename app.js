@@ -151,7 +151,7 @@ server.get( "/volan", function( req, res, next ){
   function findProperStation( query, fn ){
     var station, _state;
     var start = Date.now();
-    elasticFindStation( query, {wildcard: false}, function( err, stations ){
+    helpers.elasticFindStation( query, {wildcard: false}, function( err, stations ){
       req.visitor
         .timing( "search", "finding-station", Date.now() - start, query );
       
@@ -360,7 +360,7 @@ server.get( "/volan/station", function( req, res, next ){
   var start = Date.now();
 
   var q = req.params.q;
-  elasticFindStation( q, { wildcard: true, order: true }, function( err, result ){
+  helpers.elasticFindStation( q, { wildcard: true, order: true }, function( err, result ){
     if( err ){
       return next( err );
     }
