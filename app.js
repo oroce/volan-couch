@@ -466,9 +466,9 @@ server.get( "/volan/rss", function( req, res, next ){
 
 function onListen( err ){
   if( err ){
-    return server.log.error( err );
+    return logger.error( err );
   }
-  server.log.info( "server listening on port: %s in mode: %s", server.address().port, server.mode );
+  logger.info( "server listening on port: %s in mode: %s", server.address().port, server.mode );
 }
 server
   .on( "uncaughtException", function (request, response, route, err ){
@@ -485,7 +485,7 @@ server
       .timing( "response", req.url, Date.now() - req._time, util.format( "%j", (route||{}).spec ) )
       .event( "clients", req.query.appname||req.headers["user-agent"] )
       .send();
-    logger.info( "Request done (%s) in %s", req.url, ((Date.now() - req._time)/1000).toFixed(2) );
+    logger.info( "Request done (%s) with status %s in %s", req.url, res.statusCode, ((Date.now() - req._time)/1000).toFixed(2) );
   });
 if( module.parent  ){
   module.exports = server;
