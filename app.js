@@ -358,36 +358,17 @@ var elasticFindStation = function( q, options, cb ){
 };
 server.get( "/volan/station", function( req, res, next ){
   var start = Date.now();
-  if( req.params.e ){
-    var q = req.params.q;
-    elasticFindStation( q, { wildcard: true, order: true }, function( err, result ){
-      if( err ){
-        return next( err );
-      }
-      req.visitor
-        .timing( "station", "search-elastic", Date.now() - start );
-      res.json( result );
-      next();
-    });
-    return;
-  }
 
-  
-  var query = ( req.params.q||"" ).replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&");
-  var re = new RegExp("(" + query + ")", "ig");
-  var results = [];
-  db.createValueStream()
-    .on( "data", function( b ){
-      if( re.test( b.name ) ){
-        results.push( b );
-      }
-    })
-    .on( "end", function(){
-      req.visitor
-        .timing( "station", "search", Date.now() - start );
-      res.json( results );
-      next();
-    });
+  var q = req.params.q;
+  elasticFindStation( q, { wildcard: true, order: true }, function( err, result ){
+    if( err ){
+      return next( err );
+    }
+    req.visitor
+      .timing( "station", "search-elastic", Date.now() - start );
+    res.json( result );
+    next();
+  });
 });
 
 server.get( "/volan/info", function infoHandler( req, res, next ){
