@@ -52,7 +52,11 @@ server.get( "/volan", function( req, res, next ){
     to = req.params.to,
     via = req.params.via;
   var appURL = req.headers.host;
-
+  if( !from || !to ){
+    var error = new Error( "Missing from or to parameter" );
+    error.statusCode = 400;
+    return next( error );
+  }
   function onResponse( body, res, next ){
     var err;
     var parseStart = Date.now();
