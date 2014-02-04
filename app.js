@@ -58,6 +58,7 @@ server.get( "/volan", function( req, res, next ){
     return next( error );
   }
   function onResponse( body, res, next ){
+    return res.send( JSON.parse(body.toString()) );
     var err;
     var parseStart = Date.now();
     var doc = libxml.parseHtmlString( body );
@@ -231,14 +232,19 @@ server.get( "/volan", function( req, res, next ){
       ext_settings:"none",
       submitted:1
     };
-    debug( "sending form: %j", form );
+    debug( "sending form: %j", {json: escape(qs.stringify(form))} );
     var requestStart = Date.now();
     helpers.makeRequest({
-        url: "http://ujmenetrend.cdata.hu/uj_menetrend/volan/talalatok.php",
+        url: "http://ujmenetrend.cdata.hu/uj_menetrend/volan/talalatok_json.php",
         encoding: null,
         method: "POST",
-        form: form,
+        /*form: {
+          json: "%7B%22min%22%3A%2232%22%2C%22target%22%3A0%2C%22hova%22%3A%22Tordas%22%2C%22keresztul_zoom%22%3A%220%22%2C%22honnan%22%3A%22Martonv%C3%A1s%C3%A1r%2C%20posta%22%2C%22honnan_eovx%22%3A630442.390625%2C%22ext_settings%22%3A%22block%22%2C%22hova_ls_id%22%3A%220%22%2C%22ind_stype%22%3A%22megallo%22%2C%22helyi%22%3A%22No%22%2C%22honnan_ls_id%22%3A%22725%22%2C%22keresztul%22%3A%22%22%2C%22keresztul_ls_id%22%3A%220%22%2C%22keresztul_settlement_id%22%3A%220%22%2C%22maxwalk%22%3A%2210000%22%2C%22maxatszallas%22%3A%2210%22%2C%22honnan_settlement_id%22%3A%22465%22%2C%22hova_zoom%22%3A%227%22%2C%22hova_settlement_id%22%3A%222100%22%2C%22naptipus%22%3A%221%22%2C%22submitted%22%3A%221%22%2C%22hova_eovx%22%3A627443%2C%22honnan_site_code%22%3A%220%22%2C%22hour%22%3A%2209%22%2C%22datum%22%3A%222014-01-28%22%2C%22keresztul_eovy%22%3A%22%22%2C%22keresztul_site_code%22%3A%220%22%2C%22utirany%22%3A%22oda%22%2C%22var%22%3A%220%22%2C%22hova_site_code%22%3A%220%22%2C%22rendezes%22%3A%220%22%2C%22maxvar%22%3A%22600%22%2C%22hova_eovy%22%3A222276%2C%22erk_stype%22%3A%22megallo%22%2C%22filtering%22%3A%220%22%2C%22honnan_zoom%22%3A%229%22%2C%22keresztul_eovx%22%3A%22%22%2C%22napszak%22%3A%220%22%2C%22talalatok%22%3A%221%22%2C%22preferencia%22%3A%221%22%2C%22honnan_eovy%22%3A218922.75390625%2C%22odavissza%22%3A%220%22%7D"
+          /*escape(qs.stringify( form ))
+        },*/
+        body: "json=%7B%22min%22%3A%2232%22%2C%22target%22%3A0%2C%22hova%22%3A%22Tordas%22%2C%22keresztul_zoom%22%3A%220%22%2C%22honnan%22%3A%22Martonv%C3%A1s%C3%A1r%2C%20posta%22%2C%22honnan_eovx%22%3A630442.390625%2C%22ext_settings%22%3A%22block%22%2C%22hova_ls_id%22%3A%220%22%2C%22ind_stype%22%3A%22megallo%22%2C%22helyi%22%3A%22No%22%2C%22honnan_ls_id%22%3A%22725%22%2C%22keresztul%22%3A%22%22%2C%22keresztul_ls_id%22%3A%220%22%2C%22keresztul_settlement_id%22%3A%220%22%2C%22maxwalk%22%3A%2210000%22%2C%22maxatszallas%22%3A%2210%22%2C%22honnan_settlement_id%22%3A%22465%22%2C%22hova_zoom%22%3A%227%22%2C%22hova_settlement_id%22%3A%222100%22%2C%22naptipus%22%3A%221%22%2C%22submitted%22%3A%221%22%2C%22hova_eovx%22%3A627443%2C%22honnan_site_code%22%3A%220%22%2C%22hour%22%3A%2209%22%2C%22datum%22%3A%222014-01-28%22%2C%22keresztul_eovy%22%3A%22%22%2C%22keresztul_site_code%22%3A%220%22%2C%22utirany%22%3A%22oda%22%2C%22var%22%3A%220%22%2C%22hova_site_code%22%3A%220%22%2C%22rendezes%22%3A%220%22%2C%22maxvar%22%3A%22600%22%2C%22hova_eovy%22%3A222276%2C%22erk_stype%22%3A%22megallo%22%2C%22filtering%22%3A%220%22%2C%22honnan_zoom%22%3A%229%22%2C%22keresztul_eovx%22%3A%22%22%2C%22napszak%22%3A%220%22%2C%22talalatok%22%3A%221%22%2C%22preferencia%22%3A%221%22%2C%22honnan_eovy%22%3A218922.75390625%2C%22odavissza%22%3A%220%22%7D",
         headers: {
+          "User-Agent": "iMenetrendek/1.0 (iPhone; iOS 7.0.4; Scale/2.00)",
           "Content-Type": "application/x-www-form-urlencoded"
         },
       }, function( err, response, body ){
