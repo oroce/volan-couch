@@ -158,7 +158,7 @@ server.get( "/volan", function( req, res, next ){
     helpers.elasticFindStation( query, {wildcard: false}, function( err, stations ){
       req.visitor
         .timing( "search", "finding-station", Date.now() - start, query );
-      
+
       var station = stations && stations[ 0 ];
       fn( err, station );
     });
@@ -239,7 +239,8 @@ server.get( "/volan", function( req, res, next ){
         method: "POST",
         form: form,
         headers: {
-          "Content-Type": "application/x-www-form-urlencoded"
+          "Referer": "http://ujmenetrend.cdata.hu/uj_menetrend/volan/",
+          "User-Agent": "curl/7.30.0"
         },
       }, function( err, response, body ){
         req.visitor
@@ -287,7 +288,7 @@ function detailsHandler( req, res, next ){
       };
       var rows = [];
       var trs = doc.find( "//tr" );
-      
+
       trs.forEach(function( tr, i ){
         if( !i ){
           return;
