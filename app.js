@@ -46,7 +46,7 @@ server.pre(function( req, res, next ){
   req.visitor = ua( nconf.get( "ga" ) );
   next();
 });
-
+var vm = require( "vm" );
 server.get( "/volan", function( req, res, next ){
   var
     from = req.params.from,
@@ -270,7 +270,37 @@ server.get( "/volan", function( req, res, next ){
           };
           return next( err );
         }
-        form.hova_is_id = doc.get( "//input[@name='hova_is_id']" ).attr("value").value();
+        var evalPart = doc.find( "//script[text()]" ).filter(function( el ){
+          return /eval/.test( el.text() );
+        })[0];
+        var sandbox = {
+            document: {
+            solution: { value: "", name: "" },
+
+                    getElementById: function(){
+                            return this.solution;
+                    }
+            }
+        };
+        if( !evalPart ){
+          var err = new Error( "Cannot find the secret" );
+          err.body = {
+            message: "Cannot find the secret",
+            statusCode: 404
+          };
+          return next( err );
+        }
+        try{
+           vm.runInNewContext( evalPart.text(),sandbox );
+        }catch( x ){
+          var err = new Error( "Failed the vm" );
+          err.body = {
+            message: "Internal vm error",
+            statusCode: 500
+          };
+          return next( err );
+        }
+        form[ sandbox.document.solution.name ] = sandbox.document.solution.value;
         helpers.makeRequest({
           url: "http://ujmenetrend.cdata.hu/uj_menetrend/volan/talalatok.php",
           encoding: null,
