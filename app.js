@@ -205,7 +205,7 @@ server.get( "/volan", function( req, res, next ){
       hova: results.to.name,
       hova_settlement_id: results.to.stationId, // + ";00",
       hova_ls_id: results.to.subId||0,
-      hova_is_id: "4879",
+      hova_is_id: "4872",
       keresztul_stype:"megallo",
       keresztul: results.via ? results.via.name : "",
       keresztul_settlement_id: results.via ? results.via.stationId : "",
@@ -245,6 +245,7 @@ server.get( "/volan", function( req, res, next ){
           "User-Agent": randomUA.generate()
         },
       }, function( err, response, body ){
+
         req.visitor
           .timing( "search", "volan-request", Date.now() - requestStart, util.format( "%j", req.params ) );
           if( err ){
@@ -468,6 +469,7 @@ server
   .on( "listening", onListen )
   .on( "error", onListen )
   .on( "after", function( req, res, route ){
+
     req.visitor
       .pageview({ dp:req._path, dh: req.headers["x-forwarded-for"]||req.headers.host})
       .timing( "response", req.url, Date.now() - req._time, util.format( "%j", (route||{}).spec ) )
