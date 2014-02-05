@@ -61,7 +61,17 @@ server.get( "/volan", function( req, res, next ){
   function onResponse( body, res, next ){
     var err;
     var parseStart = Date.now();
-    var doc = libxml.parseHtmlString( body );
+    var doc;
+    try{
+      doc = libxml.parseHtmlString( body );
+    }catch(x){
+      err = new Error( "Malformed HTML" );
+      err.body = {
+        statusCode: 400,
+        message: "Menetrendek.hu is down"
+      };
+      return next( err );
+    }
     var boxTable = doc.get( "//table[@class='boxtable']" );
     if( !boxTable ){
       err = new Error( "No timetable was found" );
@@ -245,7 +255,6 @@ server.get( "/volan", function( req, res, next ){
           "User-Agent": randomUA.generate()
         },
       }, function( err, response, body ){
-
         req.visitor
           .timing( "search", "volan-request", Date.now() - requestStart, util.format( "%j", req.params ) );
           if( err ){
