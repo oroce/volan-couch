@@ -31,7 +31,8 @@ var
   logger = require( "./lib/logger" ),
   godot = require( "./lib/godot" ),
   helpers = require( "./lib/helpers" ),
-  debug = require( "debug" )( "pt:volan:app" );
+  debug = require( "debug" )( "pt:volan:app" ),
+  randomUA = require( "random-ua" );
 
 var server = restify.createServer({
   name: pkg.name,
@@ -240,7 +241,7 @@ server.get( "/volan", function( req, res, next ){
         form: form,
         headers: {
           "Referer": "http://ujmenetrend.cdata.hu/uj_menetrend/volan/",
-          "User-Agent": "Mozilla/5.0 (Linux; Android 4.4.2; Nexus 7 Build/KOT49H) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.99 Safari/537.36"
+          "User-Agent": randomUA.generate()
         },
       }, function( err, response, body ){
         req.visitor
