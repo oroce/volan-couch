@@ -205,6 +205,7 @@ server.get( "/volan", function( req, res, next ){
       hova: results.to.name,
       hova_settlement_id: results.to.stationId, // + ";00",
       hova_ls_id: results.to.subId||0,
+      hova_is_id: "4879",
       keresztul_stype:"megallo",
       keresztul: results.via ? results.via.name : "",
       keresztul_settlement_id: results.via ? results.via.stationId : "",
