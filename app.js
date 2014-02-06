@@ -275,11 +275,10 @@ server.get( "/volan", function( req, res, next ){
         })[0];
         var sandbox = {
             document: {
-            solution: { value: "", name: "" },
-
-                    getElementById: function(){
-                            return this.solution;
-                    }
+              solution: { value: "", name: "" },
+              getElementById: function(){
+                return this.solution;
+              }
             }
         };
         if( !evalPart ){
@@ -298,7 +297,7 @@ server.get( "/volan", function( req, res, next ){
             message: "Internal vm error",
             statusCode: 500
           };
-          return next( err );
+          return next( err );;;
         }
         form[ sandbox.document.solution.name ] = sandbox.document.solution.value;
         helpers.makeRequest({
@@ -308,7 +307,8 @@ server.get( "/volan", function( req, res, next ){
           form: form,
           headers: {
             "Referer": "http://ujmenetrend.cdata.hu/uj_menetrend/volan/",
-            "User-Agent": randomUA.generate()
+            "User-Agent": randomUA.generate(),
+            "Cookie": response.headers["set-cookie"].join( ";" )
           },
         }, function( err, response, body ){
           req.visitor
