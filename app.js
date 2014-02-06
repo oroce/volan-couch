@@ -270,9 +270,7 @@ server.get( "/volan", function( req, res, next ){
           };
           return next( err );
         }
-        var evalPart = doc.find( "//script[text()]" ).filter(function( el ){
-          return /eval/.test( el.text() );
-        })[0];
+        var evalPart = doc.find( "//input[@name='hova_eovy']/following::script" )[0];
         var sandbox = {
             document: {
               solution: { value: "", name: "" },
